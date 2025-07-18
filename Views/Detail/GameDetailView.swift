@@ -57,13 +57,9 @@ struct GameDetailView: View {
     // Change to accept PersistentIdentifier instead of Game
     private let gameID: PersistentIdentifier
     
-    // Use @Query to fetch the game by ID
-    @Query private var games: [Game]
-    
-    // Computed property to get the current game
-    private var game: Game? {
-        games.first { $0.persistentModelID == gameID }
-    }
+    // Use @State to directly store the game
+    @State private var game: Game?
+    @State private var isLoading = true
     
     // Helper computed properties for bindings
     private var gameBinding: Binding<Game?> {
@@ -76,112 +72,160 @@ struct GameDetailView: View {
     private var titleBinding: Binding<String> {
         Binding(
             get: { game?.title ?? "" },
-            set: { newValue in game?.title = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.title = newValue 
+            }
         )
     }
     
     private var platformBinding: Binding<Platform?> {
         Binding(
             get: { game?.platform },
-            set: { newValue in game?.platform = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.platform = newValue 
+            }
         )
     }
     
     private var ownershipStatusBinding: Binding<OwnershipStatus> {
         Binding(
             get: { game?.ownershipStatus ?? .owned },
-            set: { newValue in game?.ownershipStatus = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.ownershipStatus = newValue 
+            }
         )
     }
     
     private var purchaseDateBinding: Binding<Date> {
         Binding(
             get: { game?.purchaseDate ?? Date() },
-            set: { newValue in game?.purchaseDate = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.purchaseDate = newValue 
+            }
         )
     }
     
     private var releaseDateBinding: Binding<Date> {
         Binding(
             get: { game?.releaseDate ?? Date() },
-            set: { newValue in game?.releaseDate = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.releaseDate = newValue 
+            }
         )
     }
     
     private var startDateBinding: Binding<Date> {
         Binding(
             get: { game?.startDate ?? Date() },
-            set: { newValue in game?.startDate = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.startDate = newValue 
+            }
         )
     }
     
     private var completionDateBinding: Binding<Date> {
         Binding(
             get: { game?.completionDate ?? Date() },
-            set: { newValue in game?.completionDate = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.completionDate = newValue 
+            }
         )
     }
     
     private var isInstalledBinding: Binding<Bool> {
         Binding(
             get: { game?.isInstalled ?? false },
-            set: { newValue in game?.isInstalled = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.isInstalled = newValue 
+            }
         )
     }
     
     private var linkedHardwareBinding: Binding<Hardware?> {
         Binding(
             get: { game?.linkedHardware },
-            set: { newValue in game?.linkedHardware = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.linkedHardware = newValue 
+            }
         )
     }
     
     private var hasCaseBinding: Binding<Bool> {
         Binding(
             get: { game?.hasCase ?? false },
-            set: { newValue in game?.hasCase = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.hasCase = newValue 
+            }
         )
     }
     
     private var hasManualBinding: Binding<Bool> {
         Binding(
             get: { game?.hasManual ?? false },
-            set: { newValue in game?.hasManual = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.hasManual = newValue 
+            }
         )
     }
     
     private var hasInsertsBinding: Binding<Bool> {
         Binding(
             get: { game?.hasInserts ?? false },
-            set: { newValue in game?.hasInserts = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.hasInserts = newValue 
+            }
         )
     }
     
     private var isSealedBinding: Binding<Bool> {
         Binding(
             get: { game?.isSealed ?? false },
-            set: { newValue in game?.isSealed = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.isSealed = newValue 
+            }
         )
     }
     
     private var userHLTBMainBinding: Binding<Double> {
         Binding(
             get: { game?.userHLTBMain ?? 0 },
-            set: { newValue in game?.userHLTBMain = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.userHLTBMain = newValue 
+            }
         )
     }
     
     private var userHLTBExtraBinding: Binding<Double> {
         Binding(
             get: { game?.userHLTBExtra ?? 0 },
-            set: { newValue in game?.userHLTBExtra = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.userHLTBExtra = newValue 
+            }
         )
     }
     
     private var userHLTBCompletionistBinding: Binding<Double> {
         Binding(
             get: { game?.userHLTBCompletionist ?? 0 },
-            set: { newValue in game?.userHLTBCompletionist = newValue }
+            set: { newValue in 
+                guard let game = game else { return }
+                game.userHLTBCompletionist = newValue 
+            }
         )
     }
     
@@ -208,6 +252,12 @@ struct GameDetailView: View {
     @State private var msrpString: String = ""
     @State private var totalTimePlayedString: String = ""
     @State private var gameSizeString: String = ""
+    @State private var selectedSizeUnit: SizeUnit = .megabytes
+    
+    enum SizeUnit: String, CaseIterable {
+        case megabytes = "MB"
+        case gigabytes = "GB"
+    }
     @State private var selectedPDFIndex: Int? = nil
     
     // Add this state for filtering
@@ -260,9 +310,8 @@ struct GameDetailView: View {
     
     // MARK: - Computed Properties
     private var linkedGames: [Game] {
-        let descriptor = FetchDescriptor<Game>()
-        let allGames = (try? modelContext.fetch(descriptor)) ?? []
-        return allGames.filter { $0.parentCollection?.id == game?.id }
+        guard let game = game else { return [] }
+        return allGames.filter { $0.parentCollection?.id == game.id }
     }
     
     private var isGameCollection: Bool {
@@ -301,20 +350,28 @@ struct GameDetailView: View {
     // MARK: - Main Body
     var body: some View {
         Group {
-            if let game = game {
+            if game != nil {
                 gameDetailForm
             } else {
-                VStack {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.system(size: 48))
-                        .foregroundColor(.red)
-                    Text("Game not found")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    Text("The game may have been deleted or moved.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
+                VStack(spacing: 16) {
+                    if isLoading {
+                        // Still loading game
+                        ProgressView("Loading game...")
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .scaleEffect(1.2)
+                    } else {
+                        // Game not found
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.red)
+                        Text("Game not found")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Text("The game may have been deleted or moved.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
                 }
                 .padding()
             }
@@ -322,18 +379,28 @@ struct GameDetailView: View {
         .navigationTitle(game?.title ?? "Game")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            setupTextFields()
-            selectedStatus = game?.status ?? .backlog
-            
-            // Defensive: treat empty includedGames as nil
-            if let included = game?.includedGames, included.isEmpty {
-                game?.includedGames = nil
-            }
+            loadGame()
         }
         .onChange(of: purchasePriceString) { _, newValue in if let value = Double(newValue) { game?.purchasePrice = value } }
         .onChange(of: msrpString) { _, newValue in if let value = Double(newValue) { game?.msrp = value } }
         .onChange(of: totalTimePlayedString) { _, newValue in if let value = Double(newValue) { game?.manuallySetTotalTime = value } }
-        .onChange(of: gameSizeString) { _, newValue in if let value = Double(newValue) { game?.gameSizeInMB = value } }
+        .onChange(of: gameSizeString) { _, newValue in 
+            if let value = Double(newValue) { 
+                game?.gameSizeInMB = convertToMB(value) 
+            } 
+        }
+        .onChange(of: selectedSizeUnit) { _, newUnit in
+            // Convert the current value to the new unit
+            if let currentValue = Double(gameSizeString), currentValue > 0 {
+                let sizeInMB = convertToMB(currentValue)
+                switch newUnit {
+                case .megabytes:
+                    gameSizeString = String(format: "%.0f", sizeInMB)
+                case .gigabytes:
+                    gameSizeString = String(format: "%.2f", sizeInMB / 1024)
+                }
+            }
+        }
     }
     
     @ViewBuilder
@@ -428,7 +495,23 @@ struct GameDetailView: View {
         .onChange(of: purchasePriceString) { _, newValue in if let value = Double(newValue) { game?.purchasePrice = value } }
         .onChange(of: msrpString) { _, newValue in if let value = Double(newValue) { game?.msrp = value } }
         .onChange(of: totalTimePlayedString) { _, newValue in if let value = Double(newValue) { game?.manuallySetTotalTime = value } }
-        .onChange(of: gameSizeString) { _, newValue in if let value = Double(newValue) { game?.gameSizeInMB = value } }
+        .onChange(of: gameSizeString) { _, newValue in 
+            if let value = Double(newValue) { 
+                game?.gameSizeInMB = convertToMB(value) 
+            } 
+        }
+        .onChange(of: selectedSizeUnit) { _, newUnit in
+            // Convert the current value to the new unit
+            if let currentValue = Double(gameSizeString), currentValue > 0 {
+                let sizeInMB = convertToMB(currentValue)
+                switch newUnit {
+                case .megabytes:
+                    gameSizeString = String(format: "%.0f", sizeInMB)
+                case .gigabytes:
+                    gameSizeString = String(format: "%.2f", sizeInMB / 1024)
+                }
+            }
+        }
     }
     
     // MARK: - Subviews (Now inside the main struct)
@@ -749,7 +832,44 @@ struct GameDetailView: View {
                             .foregroundColor(.primary)
                     }
                 ) {
-                    HStack { Text("Game Size (MB)"); Spacer(); TextField("Size", text: $gameSizeString).multilineTextAlignment(.trailing).keyboardType(.decimalPad) }
+                    // Game Size Input with MB/GB conversion
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Image(systemName: "externaldrive.fill")
+                                .foregroundColor(.blue)
+                                .font(.body)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Game Size")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                
+                                HStack {
+                                    TextField("Size", text: $gameSizeString)
+                                        .keyboardType(.decimalPad)
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .frame(width: 80)
+                                    
+                                    Picker("Unit", selection: $selectedSizeUnit) {
+                                        ForEach(SizeUnit.allCases, id: \.self) { unit in
+                                            Text(unit.rawValue).tag(unit)
+                                        }
+                                    }
+                                    .pickerStyle(.segmented)
+                                    .frame(width: 100)
+                                    
+                                    Spacer()
+                                }
+                                
+                                // Show conversion in smaller text
+                                if let inputValue = Double(gameSizeString), inputValue > 0 {
+                                    Text(formatSizeConversion(inputValue))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    }
                     Toggle("Currently Installed", isOn: isInstalledBinding)
                         .onChange(of: game?.isInstalled ?? false) { _, isNowInstalled in
                             if isNowInstalled {
@@ -1035,12 +1155,23 @@ struct GameDetailView: View {
             }
         ) {
             HStack(spacing: 8) {
-                HLTBBox(label: "Main Story", value: userHLTBMainBinding)
-                    .frame(width: 120, height: 90)
-                HLTBBox(label: "Main + Sides", value: userHLTBExtraBinding)
-                    .frame(width: 120, height: 90)
-                HLTBBox(label: "Completionist", value: userHLTBCompletionistBinding)
-                    .frame(width: 120, height: 90)
+                HLTBBox(
+                    label: "Main Story", 
+                    userValue: userHLTBMainBinding
+                )
+                .frame(width: 120, height: 90)
+                
+                HLTBBox(
+                    label: "Main + Sides", 
+                    userValue: userHLTBExtraBinding
+                )
+                .frame(width: 120, height: 90)
+                
+                HLTBBox(
+                    label: "Completionist", 
+                    userValue: userHLTBCompletionistBinding
+                )
+                .frame(width: 120, height: 90)
             }
             .frame(maxWidth: .infinity)
             .listRowInsets(EdgeInsets())
@@ -1228,11 +1359,95 @@ struct GameDetailView: View {
     }
     
     // MARK: - Helper Functions
+    private func loadGame() {
+        isLoading = true
+        
+        // Try to find the game by ID
+        Task {
+            do {
+                // First try to find in the allGames query
+                if let foundGame = allGames.first(where: { $0.persistentModelID == gameID }) {
+                    await MainActor.run {
+                        self.game = foundGame
+                        self.isLoading = false
+                        self.selectedStatus = foundGame.status
+                        self.setupTextFields()
+                        
+                        // Defensive: treat empty includedGames as nil
+                        if let included = foundGame.includedGames, included.isEmpty {
+                            foundGame.includedGames = nil
+                        }
+                    }
+                    return
+                }
+                
+                // If not found in allGames, try direct fetch
+                let descriptor = FetchDescriptor<Game>()
+                let fetchedGames = try modelContext.fetch(descriptor)
+                
+                if let foundGame = fetchedGames.first(where: { $0.persistentModelID == gameID }) {
+                    await MainActor.run {
+                        self.game = foundGame
+                        self.isLoading = false
+                        self.selectedStatus = foundGame.status
+                        self.setupTextFields()
+                        
+                        // Defensive: treat empty includedGames as nil
+                        if let included = foundGame.includedGames, included.isEmpty {
+                            foundGame.includedGames = nil
+                        }
+                    }
+                } else {
+                    // Game truly not found
+                    await MainActor.run {
+                        self.isLoading = false
+                        print("DEBUG: Game not found with ID: \(gameID)")
+                        print("DEBUG: Available games: \(fetchedGames.map { $0.title })")
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoading = false
+                    print("DEBUG: Error loading game: \(error)")
+                }
+            }
+        }
+    }
+    
     private func setupTextFields() {
         purchasePriceString = String(format: "%.2f", game?.purchasePrice ?? 0)
         msrpString = String(format: "%.2f", game?.msrp ?? 0)
         totalTimePlayedString = String(format: "%.2f", game?.manuallySetTotalTime ?? 0)
-        gameSizeString = String(format: "%.0f", game?.gameSizeInMB ?? 0)
+        
+        // Setup game size with smart unit selection
+        let sizeInMB = game?.gameSizeInMB ?? 0
+        if sizeInMB >= 1024 {
+            selectedSizeUnit = .gigabytes
+            gameSizeString = String(format: "%.2f", sizeInMB / 1024)
+        } else {
+            selectedSizeUnit = .megabytes
+            gameSizeString = String(format: "%.0f", sizeInMB)
+        }
+    }
+    
+    private func formatSizeConversion(_ inputValue: Double) -> String {
+        switch selectedSizeUnit {
+        case .megabytes:
+            let gb = inputValue / 1024
+            return "≈ \(String(format: "%.2f", gb)) GB"
+        case .gigabytes:
+            let mb = inputValue * 1024
+            return "≈ \(String(format: "%.0f", mb)) MB"
+        }
+    }
+    
+    private func convertToMB(_ value: Double) -> Double {
+        switch selectedSizeUnit {
+        case .megabytes:
+            return value
+        case .gigabytes:
+            return value * 1024
+        }
     }
     
     private func handlePhotoSelection() {
@@ -1351,15 +1566,11 @@ fileprivate func formatHLTB(hours: Double) -> String {
 }
 
 // MARK: - Binding Helper
-fileprivate extension Binding {
-    init<T>(_ source: Binding<T?>, default: T) where Value == T {
-        self.init(get: { source.wrappedValue ?? `default` }, set: { source.wrappedValue = $0 })
-    }
-}
+// Note: Custom Binding extension removed for Swift 6 compatibility
 
 struct HLTBBox: View {
     let label: String
-    @Binding var value: Double
+    @Binding var userValue: Double
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -1370,12 +1581,13 @@ struct HLTBBox: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
+            
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 TextField("H", text: Binding(
-                    get: { formattedInput(value) },
+                    get: { formattedInput(userValue) },
                     set: { newValue in
                         if let parsed = parseHLTBInput(newValue) {
-                            value = parsed
+                            userValue = parsed
                         }
                     })
                 )
@@ -1389,6 +1601,7 @@ struct HLTBBox: View {
                     .font(.subheadline)
                     .foregroundColor(.white)
             }
+            
             Spacer()
         }
         .padding()

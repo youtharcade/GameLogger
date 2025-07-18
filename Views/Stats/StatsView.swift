@@ -59,7 +59,12 @@ struct StatsView: View {
     private var gamesByStatus: [(status: GameStatus, count: Int)] { Dictionary(grouping: games, by: { $0.status }).mapValues { $0.count }.sorted { $0.key.rawValue < $1.key.rawValue }.map { (status: $0.key, count: $0.value) } }
     private var recentlyPurchased: [Game] { Array(games.sorted { $0.purchaseDate > $1.purchaseDate }.prefix(5)) }
     private var oldestBacklogGames: [Game] { Array(games.filter { $0.status != .completed }.sorted { $0.purchaseDate < $1.purchaseDate }.prefix(5)) }
-    private var recentlyCompleted: [Game] { Array(games.filter { $0.status == .completed && $0.completionDate != nil }.sorted { $0.completionDate! > $1.completionDate! }.prefix(5)) }
+    private var recentlyCompleted: [Game] { 
+        Array(games.compactMap { game in
+            guard game.status == .completed, let _ = game.completionDate else { return nil }
+            return game
+        }.sorted { ($0.completionDate ?? .distantPast) > ($1.completionDate ?? .distantPast) }.prefix(5))
+    }
 
     // Hardware stats
     private var hardwarePurchasePrice: Double { hardwareItems.reduce(0) { $0 + $1.purchasePrice } }
@@ -80,6 +85,7 @@ struct StatsView: View {
     }
 
     private var platformValues: [PlatformValue] {
+        guard !games.isEmpty else { return [] }
         let dict = Dictionary(grouping: games, by: { $0.platform?.name ?? "No Platform" })
         return dict.map { PlatformValue(platformName: $0.key, value: $0.value.reduce(0) { $0 + $1.purchasePrice }) }
             .sorted { $0.value > $1.value }
@@ -88,6 +94,7 @@ struct StatsView: View {
     }
 
     private var platformValueCategories: [ValueCategory] {
+        guard !games.isEmpty else { return [] }
         let palette: [Color] = [.blue, .orange, .green, .purple, .pink, .teal, .red, .yellow]
         let dict = Dictionary(grouping: games, by: { $0.platform?.name ?? "No Platform" })
         return dict.sorted { $0.value.reduce(0) { $0 + $1.purchasePrice } > $1.value.reduce(0) { $0 + $1.purchasePrice } }

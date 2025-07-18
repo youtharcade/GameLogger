@@ -21,8 +21,6 @@ struct IGDBGenre: Codable {
     let name: String
 }
 
-// Note: IGDBTimeToBeat struct is removed as it cannot be fetched via search.
-
 struct IGDBGame: Codable, Identifiable {
     let id: Int
     let name: String
@@ -31,6 +29,7 @@ struct IGDBGame: Codable, Identifiable {
     let first_release_date: Int?
     let genres: [IGDBGenre]?
     let involved_companies: [IGDBInvolvedCompany]?
+    // Note: time_to_beat is not available in search results
 }
 
 struct IGDBPlatform: Codable, Identifiable {
@@ -62,7 +61,7 @@ class IGDBClient {
     private let minimumRequestInterval: TimeInterval = 1.0 // 1 second between requests
     
     func getAccessToken(completion: @escaping (Bool) -> Void) {
-        if let token = accessToken {
+        if accessToken != nil {
             print("IGDB: Using existing access token.")
             completion(true)
             return
@@ -126,7 +125,7 @@ class IGDBClient {
             
             guard let url = URL(string: self.apiBaseURL + "games") else { return }
             
-            // This query removes the problematic time_to_beat fields to prevent API errors.
+            // Remove time_to_beat fields for now due to API limitations
             let requestBody = """
             search "\(query)";
             fields

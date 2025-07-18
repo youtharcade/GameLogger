@@ -277,6 +277,7 @@ class Hardware {
     }
     
     var usedStorageInGB: Double {
+        guard !linkedGames.isEmpty else { return 0.0 }
         let totalMB = linkedGames.filter { $0.isInstalled }.reduce(0) { $0 + $1.gameSizeInMB }
         return totalMB / 1000 // Convert MB to GB
     }

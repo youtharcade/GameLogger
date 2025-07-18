@@ -20,7 +20,7 @@ struct HardwareDetailView: View {
     @State private var msrpString: String = ""
     @State private var internalStorageString: String = ""
     @State private var externalStorageString: String = ""
-    @State private var selectedInstalledGames: Bool = false
+
     @State private var miscDataString: String = "0"
     @State private var installedSizeString: String = "0.00"
     
@@ -160,7 +160,10 @@ struct HardwareDetailView: View {
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.secondary)
-                        TextField("Enter serial number", text: Binding($hardware.serialNumber, default: ""))
+                        TextField("Enter serial number", text: Binding(
+                            get: { hardware.serialNumber ?? "" },
+                            set: { hardware.serialNumber = $0.isEmpty ? nil : $0 }
+                        ))
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
@@ -180,7 +183,10 @@ struct HardwareDetailView: View {
             ) {
                 HStack(spacing: 8) {
                     PurchaseInfoBox(purchaseDate: $hardware.purchaseDate, purchasePrice: $purchasePriceString)
-                    ReleaseInfoBox(releaseDate: Binding($hardware.releaseDate, default: Date()), msrp: $msrpString)
+                    ReleaseInfoBox(releaseDate: Binding(
+                        get: { hardware.releaseDate ?? Date() },
+                        set: { hardware.releaseDate = $0 }
+                    ), msrp: $msrpString)
                 }
                 .frame(maxWidth: .infinity)
                 .listRowInsets(EdgeInsets())
@@ -364,7 +370,7 @@ struct HardwareDetailView: View {
                     }
                     
                     // View Installed Games Button
-                    Button(action: { selectedInstalledGames = true }) {
+                    NavigationLink(destination: CollectionPageView(hardwareFilter: hardware)) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
                                 .font(.body)
@@ -386,10 +392,6 @@ struct HardwareDetailView: View {
                         .shadow(color: Color.blue.opacity(0.3), radius: 4, x: 0, y: 2)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .background(
-                        NavigationLink(destination: CollectionPageView(hardwareFilter: hardware), isActive: $selectedInstalledGames) { EmptyView() }
-                            .hidden()
-                    )
                 }
             }
         }
@@ -454,11 +456,7 @@ struct HardwareDetailView: View {
 }
 
 // Custom Binding extension for optional properties
-fileprivate extension Binding {
-    init<T>(_ source: Binding<T?>, default: T) where Value == T {
-        self.init(get: { source.wrappedValue ?? `default` }, set: { source.wrappedValue = $0 })
-    }
-}
+// Note: Custom Binding extension removed for Swift 6 compatibility
 
 
 

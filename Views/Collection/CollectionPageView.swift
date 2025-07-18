@@ -9,7 +9,7 @@ struct CollectionPageView: View {
     
     @Query(sort: \Game.title) private var allGames: [Game]
     
-    @State private var layout: LayoutStyle = .list
+    @State private var layout: LayoutStyle = .grid
     @State private var searchText = ""
     @State private var searchResults: [PlatformGames] = []
     @State private var selectedGameID: PersistentIdentifier? = nil
@@ -56,6 +56,12 @@ struct CollectionPageView: View {
     }
     
     private func updateSearchResults() {
+        // Early return if no games are loaded yet
+        guard !allGames.isEmpty else { 
+            searchResults = []
+            return 
+        }
+        
         // First filter by ownership status and sub-game status (previously in predicate)
         let filteredByStatus = allGames.filter { game in
             game.ownershipStatusValue == "In Collection" && !game.isSubGame

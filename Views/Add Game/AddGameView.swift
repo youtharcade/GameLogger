@@ -18,7 +18,7 @@ struct AddGameView: View {
     @State private var searchText = ""
     @State private var searchResults: [IGDBGame] = []
     @State private var isLoading = false
-    @State private var showManualAdd = false
+
     @State private var gameToConfirm: IGDBGame?
     @State private var hasSearched = false
 
@@ -74,8 +74,10 @@ struct AddGameView: View {
                 
                 // Hide manual add button when adding a sub-game
                 if parentGame == nil {
-                    NavigationLink(destination: ManualAddGameView(), isActive: $showManualAdd) { EmptyView() }
-                    Button { showManualAdd = true } label: { Label("Can't find it? Add Manually", systemImage: "pencil.and.scribble") }.padding()
+                    NavigationLink(destination: ManualAddGameView()) {
+                        Label("Can't find it? Add Manually", systemImage: "pencil.and.scribble")
+                    }
+                    .padding()
                 }
             }
             .navigationTitle(parentGame == nil ? "Add New Game" : "Add Included Game")

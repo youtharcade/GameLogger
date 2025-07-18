@@ -21,7 +21,8 @@ struct BacklogView: View {
     
     // 4. A computed property that filters the games based on the selected status and backlog logic.
     private var filteredGames: [Game] {
-        allGames.filter {
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter {
             !$0.isWishlisted &&
             !$0.isSubGame &&
             $0.statusValue != "Completed" &&

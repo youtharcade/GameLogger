@@ -14,23 +14,28 @@ struct CollectionHomePageView: View {
     
     // --- COMPUTED PROPERTIES FOR FILTERING ---
     private var collectionGames: [Game] {
-        allGames.filter { !$0.isWishlisted && !$0.isSubGame && $0.ownershipStatusValue == "In Collection" }
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter { !$0.isWishlisted && !$0.isSubGame && $0.ownershipStatusValue == "In Collection" }
     }
     
     private var graveyardGames: [Game] {
-        allGames.filter { $0.ownershipStatusValue != "In Collection" }
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter { $0.ownershipStatusValue != "In Collection" }
     }
     
     private var wishlistedGames: [Game] {
-        allGames.filter { $0.isWishlisted }
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter { $0.isWishlisted }
     }
     
     private var inProgressGames: [Game] {
-        allGames.filter { $0.statusValue == "In Progress" && !$0.isWishlisted && !$0.isSubGame }
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter { $0.statusValue == "In Progress" && !$0.isWishlisted && !$0.isSubGame }
     }
     
     private var fiveStarGames: [Game] {
-        allGames.filter { $0.starRating == 5 && !$0.isWishlisted && !$0.isSubGame }
+        guard !allGames.isEmpty else { return [] }
+        return allGames.filter { $0.starRating == 5 && !$0.isWishlisted && !$0.isSubGame }
     }
     
     // --- STATE ---
