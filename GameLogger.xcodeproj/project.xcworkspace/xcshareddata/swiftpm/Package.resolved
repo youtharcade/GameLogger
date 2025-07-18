@@ -1,0 +1,15 @@
+{
+  "originHash" : "4d91c8cd1c3ef6b2f71707336c20e104f2e3d4062afdcc247e92b162266d4859",
+  "pins" : [
+    {
+      "identity" : "swiftui-markdown",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jaywcjlove/swiftui-markdown",
+      "state" : {
+        "branch" : "main",
+        "revision" : "5c28ce857c37efb74bb5d3c8a516c638697c8967"
+      }
+    }
+  ],
+  "version" : 3
+}
