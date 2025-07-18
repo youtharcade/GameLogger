@@ -36,6 +36,27 @@ struct HardwareDetailView: View {
         return combined.sorted { $0.name < $1.name }
     }
     
+    // Storage usage computed properties
+    private var usagePercentage: Int {
+        let total = hardware.totalStorageInGB
+        guard total > 0 else { return 0 }
+        let used = hardware.usedStorageInGB + (Double(miscDataString) ?? 0)
+        return Int((used / total) * 100)
+    }
+    
+    private var availableSpaceColor: Color {
+        switch usagePercentage {
+        case 0...60:
+            return .green
+        case 61...80:
+            return .yellow
+        case 81...95:
+            return .orange
+        default:
+            return .red
+        }
+    }
+    
     init(hardware: Hardware?) {
         if let hardware = hardware {
             _hardware = State(initialValue: hardware)
@@ -175,12 +196,75 @@ struct HardwareDetailView: View {
                         .foregroundColor(.primary)
                 }
             ) {
-                HStack(spacing: 8) {
-                    StorageBox(label: "Internal Storage", value: $internalStorageString, unit: "GB")
-                    StorageBox(label: "External Storage", value: $externalStorageString, unit: "GB")
+                // Internal Storage
+                HStack {
+                    Image(systemName: "internaldrive")
+                        .foregroundColor(.blue)
+                        .font(.body)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Internal Storage")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            TextField("0", text: $internalStorageString)
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                                .keyboardType(.decimalPad)
+                                .frame(minWidth: 40)
+                            Text("GB")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity)
-                .listRowInsets(EdgeInsets())
+                
+                // External Storage
+                HStack {
+                    Image(systemName: "externaldrive")
+                        .foregroundColor(.purple)
+                        .font(.body)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("External Storage")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
+                        HStack(alignment: .firstTextBaseline, spacing: 2) {
+                            TextField("0", text: $externalStorageString)
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                                .keyboardType(.decimalPad)
+                                .frame(minWidth: 40)
+                            Text("GB")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    Spacer()
+                }
+                
+                // Total Storage Display
+                HStack {
+                    Image(systemName: "sum")
+                        .foregroundColor(.green)
+                        .font(.body)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Total Storage")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.secondary)
+                        Text("\(String(format: "%.0f", hardware.totalStorageInGB)) GB")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                    }
+                    Spacer()
+                }
             }
             
             if !isNew {
@@ -188,39 +272,118 @@ struct HardwareDetailView: View {
                     HStack {
                         Image(systemName: "gamecontroller.fill")
                             .foregroundColor(.red)
-                        Text("Installed Digital Games")
+                        Text("Digital Game Storage")
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
                     }
                 ) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            StorageBox(label: "Installed Size", value: $installedSizeString, unit: "GB", isReadOnly: true)
-                            StorageBox(label: "Misc Data", value: $miscDataString, unit: "GB")
-                            AvailableSpaceBox(
-                                available: hardware.availableStorageInGB - (Double(miscDataString) ?? 0),
-                                total: hardware.internalStorageInGB + hardware.externalStorageInGB
-                            )
+                    // Installed Size
+                    HStack {
+                        Image(systemName: "square.stack.3d.down.right.fill")
+                            .foregroundColor(.blue)
+                            .font(.body)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Installed Games Size")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            Text("\(installedSizeString) GB")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
                         }
-                        .frame(height: 110)
-                        .padding(.vertical, 2)
+                        Spacer()
+                        Text("Auto-calculated")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                    .listRowInsets(EdgeInsets())
+                    
+                    // Misc Data
+                    HStack {
+                        Image(systemName: "doc.fill")
+                            .foregroundColor(.orange)
+                            .font(.body)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("System & Misc Data")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                TextField("0", text: $miscDataString)
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.primary)
+                                    .keyboardType(.decimalPad)
+                                    .frame(minWidth: 40)
+                                Text("GB")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        Spacer()
+                    }
+                    
+                    // Available Space with Progress Indicator
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "externaldrive.badge.checkmark")
+                                .foregroundColor(availableSpaceColor)
+                                .font(.body)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Available Space")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.secondary)
+                                Text("\(String(format: "%.1f", hardware.availableStorageInGB - (Double(miscDataString) ?? 0))) GB")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.primary)
+                            }
+                            Spacer()
+                            Text("\(usagePercentage)% used")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(availableSpaceColor)
+                        }
+                        
+                        // Storage Usage Bar
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color(.systemGray5))
+                                    .frame(height: 8)
+                                
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(availableSpaceColor)
+                                    .frame(width: geometry.size.width * (Double(usagePercentage) / 100), height: 8)
+                            }
+                        }
+                        .frame(height: 8)
+                    }
+                    
+                    // View Installed Games Button
                     Button(action: { selectedInstalledGames = true }) {
                         HStack {
                             Image(systemName: "gamecontroller.fill")
-                                .font(.title2)
+                                .font(.body)
                             Text("View Installed Games")
                                 .font(.headline)
-                                .fontWeight(.bold)
+                                .fontWeight(.semibold)
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.blue, Color.blue.opacity(0.8)]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .cornerRadius(12)
-                        .shadow(color: Color.blue.opacity(0.3), radius: 6, x: 0, y: 3)
+                        .shadow(color: Color.blue.opacity(0.3), radius: 4, x: 0, y: 2)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .background(
@@ -297,103 +460,7 @@ fileprivate extension Binding {
     }
 }
 
-// MARK: - StorageBox View
-struct StorageBox: View {
-    let label: String
-    @Binding var value: String
-    let unit: String
-    var isReadOnly: Bool = false
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label)
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
-                if isReadOnly {
-                    Text(value)
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                        .frame(minWidth: 30, maxWidth: 60, alignment: .leading)
-                } else {
-                    TextField("0", text: $value)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .keyboardType(.decimalPad)
-                        .frame(minWidth: 30, maxWidth: 60, alignment: .leading)
-                }
-                Text(unit)
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-            }
-            Text(" ") // Placeholder for height match
-                .font(.caption)
-                .opacity(0)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.accentColor, lineWidth: 3)
-        )
-    }
-}
-
-// MARK: - AvailableSpaceBox View
-struct AvailableSpaceBox: View {
-    let available: Double
-    let total: Double
-
-    var percentUsed: Double {
-        guard total > 0 else { return 0 }
-        return (1 - (available / total)) * 100
-    }
-
-    var fillColor: Color {
-        switch percentUsed {
-        case 0...30:
-            return .green
-        case 31...60:
-            return .yellow
-        default:
-            return .red
-        }
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Available Space")
-                .font(.headline)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text(String(format: "%.2f", available))
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .frame(minWidth: 30, maxWidth: 60, alignment: .leading)
-                Text("GB")
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-            }
-            Text("\(Int(percentUsed))% Used")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(fillColor.opacity(0.2))
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(fillColor, lineWidth: 2)
-        )
-    }
-}
 
 // MARK: - PurchaseInfoBox View
 struct PurchaseInfoBox: View {
