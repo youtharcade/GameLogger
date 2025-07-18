@@ -8,9 +8,9 @@ import SwiftUI
 import SwiftData
 
 struct GraveyardView: View {
-    // This query fetches all games that are NOT marked as "owned"
+    // This query fetches all games that are NOT marked as "owned" and are NOT wishlisted
     @Query(filter: #Predicate<Game> {
-        $0.ownershipStatusValue != "In Collection"
+        $0.ownershipStatusValue != "In Collection" && !$0.isWishlisted
     }, sort: \.title) private var graveyardGames: [Game]
     
     var body: some View {

@@ -20,7 +20,7 @@ struct CollectionHomePageView: View {
     
     private var graveyardGames: [Game] {
         guard !allGames.isEmpty else { return [] }
-        return allGames.filter { $0.ownershipStatusValue != "In Collection" }
+        return allGames.filter { $0.ownershipStatusValue != "In Collection" && !$0.isWishlisted }
     }
     
     private var wishlistedGames: [Game] {
@@ -103,10 +103,11 @@ struct CollectionHomePageView: View {
                                             .frame(width: 30, height: 30)
                                             .foregroundStyle(.secondary)
                                     } else if platform.name.localizedCaseInsensitiveContains("nintendo") {
-                                        Image("NintendoLogo")
+                                        Image(systemName: "gamecontroller.fill")
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 30, height: 30)
+                                            .foregroundStyle(.secondary)
                                     } else {
                                         AsyncImage(url: platform.logoURL) { $0.resizable().scaledToFit() } placeholder: { Image(systemName: "gamecontroller") }
                                             .frame(width: 30, height: 30)

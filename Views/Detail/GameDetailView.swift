@@ -425,6 +425,7 @@ struct GameDetailView: View {
             hltbSection
             walkthroughSection
             playLogSectionMinimal
+            musicBadgesSection
             deleteGameSection
         }
         .sheet(item: $activeSheet) { sheet in
@@ -1339,6 +1340,67 @@ struct GameDetailView: View {
         }
     }
 
+    var musicBadgesSection: some View {
+        Section(header: 
+            HStack {
+                Image(systemName: "music.note")
+                    .foregroundColor(.purple)
+                Text("Search for Soundtrack")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
+        ) {
+            HStack(spacing: 16) {
+                // Spotify Badge
+                Button(action: {
+                    openSpotifyOST()
+                }) {
+                    HStack {
+                        Image(systemName: "music.note.list")
+                            .foregroundColor(.white)
+                        Text("Spotify")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(Color.green)
+                    .cornerRadius(25)
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                // Apple Music Badge
+                Button(action: {
+                    openAppleMusicOST()
+                }) {
+                    HStack {
+                        Image(systemName: "music.note")
+                            .foregroundColor(.white)
+                        Text("Apple Music")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.pink, Color.purple]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(25)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+        }
+    }
+    
     var deleteGameSection: some View {
         Section(header: 
             HStack {
@@ -1355,6 +1417,41 @@ struct GameDetailView: View {
                 modelContext.delete(game)
                 dismiss()
             } 
+        }
+    }
+    
+    // MARK: - Music Helper Functions
+    private func openSpotifyOST() {
+        guard let game = game else { return }
+        let searchQuery = "\(game.title) OST"
+        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+        // Try Spotify app first
+        if let spotifyURL = URL(string: "spotify:search:\(encodedQuery)"),
+           UIApplication.shared.canOpenURL(spotifyURL) {
+            UIApplication.shared.open(spotifyURL)
+        } else {
+            // Fall back to Spotify web player
+            if let webURL = URL(string: "https://open.spotify.com/search/\(encodedQuery)") {
+                UIApplication.shared.open(webURL)
+            }
+        }
+    }
+    
+    private func openAppleMusicOST() {
+        guard let game = game else { return }
+        let searchQuery = "\(game.title) OST"
+        let encodedQuery = searchQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        
+        // Try Apple Music app first
+        if let appleMusicURL = URL(string: "music://music.apple.com/search?term=\(encodedQuery)"),
+           UIApplication.shared.canOpenURL(appleMusicURL) {
+            UIApplication.shared.open(appleMusicURL)
+        } else {
+            // Fall back to Apple Music web player
+            if let webURL = URL(string: "https://music.apple.com/search?term=\(encodedQuery)") {
+                UIApplication.shared.open(webURL)
+            }
         }
     }
     
@@ -1401,14 +1498,13 @@ struct GameDetailView: View {
                     // Game truly not found
                     await MainActor.run {
                         self.isLoading = false
-                        print("DEBUG: Game not found with ID: \(gameID)")
-                        print("DEBUG: Available games: \(fetchedGames.map { $0.title })")
+                                    // Game not found - handle gracefully
                     }
                 }
             } catch {
                 await MainActor.run {
                     self.isLoading = false
-                    print("DEBUG: Error loading game: \(error)")
+                    // Error loading game - handle gracefully
                 }
             }
         }

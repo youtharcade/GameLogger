@@ -16,6 +16,7 @@ struct SettingsView: View {
     
     @State private var showingExportSheet = false
     @State private var showingAbout = false
+    @State private var showOnboarding = false
     
     var body: some View {
         NavigationStack {
@@ -34,6 +35,9 @@ struct SettingsView: View {
                 
                 // Privacy & Security
                 privacySection
+                
+                // Help & Support
+                helpSection
                 
                 // About & Attribution
                 aboutSection
@@ -54,6 +58,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingAbout) {
                 aboutDetailView
+            }
+            .fullScreenCover(isPresented: $showOnboarding) {
+                OnboardingView(showOnboarding: $showOnboarding)
             }
         }
     }
@@ -235,6 +242,39 @@ struct SettingsView: View {
         }
     }
     
+    private var helpSection: some View {
+        Section(header: 
+            HStack {
+                Image(systemName: "questionmark.circle.fill")
+                    .foregroundColor(.blue)
+                Text("Help & Support")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+            }
+        ) {
+            Button(action: { showOnboarding = true }) {
+                HStack {
+                    Image(systemName: "play.circle")
+                        .foregroundColor(.blue)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("View App Tutorial")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        Text("See how to use GameLogger's features")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Image(systemName: "arrow.right")
+                        .foregroundColor(.blue)
+                        .font(.caption)
+                }
+            }
+        }
+    }
+    
     private var aboutSection: some View {
         Section(header: 
             HStack {
@@ -306,10 +346,12 @@ struct SettingsView: View {
             }
             .foregroundColor(.orange)
             
-            Button("Debug: Show All Platform IDs") {
-                debugShowPlatformIDs()
+            // Debug functionality removed for App Store release
+            
+            Button("Reset Onboarding") {
+                UserDefaults.standard.set(false, forKey: "hasSeenOnboarding")
             }
-            .foregroundColor(.secondary)
+            .foregroundColor(.blue)
         }
     }
     
@@ -450,7 +492,5 @@ struct SettingsView: View {
         showDeveloperOptions = false
     }
     
-    private func debugShowPlatformIDs() {
-        print("Debug: Platform IDs functionality would be implemented here")
-    }
+    // Debug functionality removed for App Store release
 }

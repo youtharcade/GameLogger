@@ -62,9 +62,9 @@ struct CollectionPageView: View {
             return 
         }
         
-        // First filter by ownership status and sub-game status (previously in predicate)
+        // First filter by ownership status, sub-game status, and wishlist status
         let filteredByStatus = allGames.filter { game in
-            game.ownershipStatusValue == "In Collection" && !game.isSubGame
+            game.ownershipStatusValue == "In Collection" && !game.isSubGame && !game.isWishlisted
         }
         
         // Then filter by platform if specified
@@ -109,7 +109,7 @@ struct CollectionPageView: View {
         List {
             if platformFilter == nil && hardwareFilter == nil {
                 // Linked Games section for subgames
-                let linkedGames = allGames.filter { $0.isSubGame }
+                let linkedGames = allGames.filter { $0.isSubGame && !$0.isWishlisted }
                 if !linkedGames.isEmpty {
                     Section(header: Text("Linked Games").font(.headline)) {
                         ForEach(linkedGames) { game in
@@ -149,7 +149,7 @@ struct CollectionPageView: View {
             VStack(alignment: .leading, spacing: 20) {
                 if platformFilter == nil && hardwareFilter == nil {
                     // Linked Games section for subgames
-                    let linkedGames = allGames.filter { $0.isSubGame }
+                    let linkedGames = allGames.filter { $0.isSubGame && !$0.isWishlisted }
                     if !linkedGames.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Linked Games")

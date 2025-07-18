@@ -134,4 +134,9 @@ $RECYCLE.BIN/
 *.tmp
 .env
 .env.local
-.env.*.local 
+.env.*.local
+
+# Configuration files with sensitive data
+Config.swift
+
+ 

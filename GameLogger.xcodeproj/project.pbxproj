@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		542188892E2A7D4500B8B529 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 542188882E2A7D4500B8B529 /* README.md */; };
 		5421895C2E2A7D6200B8B529 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5421893B2E2A7D6200B8B529 /* .gitignore */; };
+		54218A602E2AA26400B8B529 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54218A5F2E2AA25700B8B529 /* Config.swift */; };
 		549E4DF62E22263600E5D8A0 /* IDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549E4DF52E22262D00E5D8A0 /* IDs.swift */; };
 		54D1A21A2E222F8C006F6FAB /* HardwareListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D1A2192E222F8C006F6FAB /* HardwareListView.swift */; };
 		54D1A21C2E222FB0006F6FAB /* HardwareDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D1A21B2E222FB0006F6FAB /* HardwareDetailView.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		542188882E2A7D4500B8B529 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5421893B2E2A7D6200B8B529 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		54218A5F2E2AA25700B8B529 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		549E4DF52E22262D00E5D8A0 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
 		54D1A2192E222F8C006F6FAB /* HardwareListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareListView.swift; sourceTree = "<group>"; };
 		54D1A21B2E222FB0006F6FAB /* HardwareDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareDetailView.swift; sourceTree = "<group>"; };
@@ -77,14 +79,6 @@
 		F8D84A322E2161FD00C56818 /* PDFViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewer.swift; sourceTree = "<group>"; };
 		F8D84A352E21626300C56818 /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		54DF77BA2E29817200BCA278 /* Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Tests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		F843A3BF2E1FF22600A545DE /* Frameworks */ = {
@@ -167,7 +161,6 @@
 		F843A44E2E20804900A545DE /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				54DF77BA2E29817200BCA278 /* Tests */,
 				54D1A22C2E253927006F6FAB /* Shared */,
 				54D1A2292E24CFD6006F6FAB /* Settings */,
 				54D1A2262E24BE39006F6FAB /* Graveyard */,
@@ -194,6 +187,7 @@
 		F843A4502E20805800A545DE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				54218A5F2E2AA25700B8B529 /* Config.swift */,
 				F843A43C2E20803100A545DE /* IGDBClient.swift */,
 			);
 			path = Services;
@@ -290,9 +284,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				54DF77BA2E29817200BCA278 /* Tests */,
-			);
 			name = GameLogger;
 			packageProductDependencies = (
 				54DF779E2E29632A00BCA278 /* Markdown */,
@@ -374,6 +365,7 @@
 				F843A4482E20803100A545DE /* AddGameView.swift in Sources */,
 				54D1A2252E24B9EB006F6FAB /* Bundle+Decodable.swift in Sources */,
 				54D1A22B2E24CFE4006F6FAB /* SettingsView.swift in Sources */,
+				54218A602E2AA26400B8B529 /* Config.swift in Sources */,
 				54DF77A12E2978C300BCA278 /* MarkdownDisplayView.swift in Sources */,
 				54D1A2202E22EF7C006F6FAB /* SummaryBoxView.swift in Sources */,
 				F8A0F41D2E20A128006F8914 /* CollectionHomePageView.swift in Sources */,
@@ -520,6 +512,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Game Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "GameLogger uses your photo library to let you add custom cover art and images for your games and hardware.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -532,18 +525,15 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.justingain.GameLogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -561,6 +551,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Game Logger";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "GameLogger uses your photo library to let you add custom cover art and images for your games and hardware.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -573,18 +564,15 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.justingain.GameLogger;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				XROS_DEPLOYMENT_TARGET = 2.5;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

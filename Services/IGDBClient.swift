@@ -53,8 +53,9 @@ struct IGDBImage: Codable {
 
 // MARK: - IGDB API Client
 class IGDBClient {
-    private let clientId = "q4z51z25mdfwt5jbuo62u9ok71p2k8" // <-- IMPORTANT
-    private let clientSecret = "w01l8cf7fiuqq90x4ay3tx8caghdy4" // <-- IMPORTANT
+    // MARK: - API Credentials
+    private let clientId = Config.igdbClientId
+    private let clientSecret = Config.igdbClientSecret
     private var accessToken: String?
     private let apiBaseURL = "https://api.igdb.com/v4/"
     private var lastRequestTime: Date = Date.distantPast
