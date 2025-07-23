@@ -31,11 +31,12 @@ struct GameGridItemView: View {
                 .shadow(radius: 4)
                 .frame(minHeight: 150)
                 
-                // Display the icon if one exists
-                if let icon = game.overlayIcon {
-                    Image(systemName: icon.name)
+                // TEMPORARY: Simplified overlay logic (overlayIcon property was removed)
+                if shouldShowOverlay(for: game) {
+                    let overlay = getOverlayInfo(for: game)
+                    Image(systemName: overlay.name)
                         .font(.footnote.bold())
-                        .foregroundStyle(icon.color)
+                        .foregroundStyle(overlay.color)
                         .padding(6)
                         .background(.black.opacity(0.6))
                         .clipShape(Circle())
@@ -48,14 +49,28 @@ struct GameGridItemView: View {
                     .font(.caption)
                     .fontWeight(.semibold)
                     .lineLimit(2)
+                    .multilineTextAlignment(.center)
                 
                 Text(subtitle)
                     .font(.caption2)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
-            .multilineTextAlignment(.center)
-            .frame(height: 50, alignment: .top)
         }
+    }
+    
+    // TEMPORARY: Helper functions to replace overlayIcon computed property
+    private func shouldShowOverlay(for game: Game) -> Bool {
+        return game.ownershipStatus != .owned || game.isSubGame
+    }
+    
+    private func getOverlayInfo(for game: Game) -> (name: String, color: Color) {
+        if game.ownershipStatus != .owned {
+            return ("archivebox.fill", .gray) // For "Graveyard" games
+        }
+        if game.isSubGame {
+            return ("link", .white) // For games included in a collection
+        }
+        return ("questionmark", .gray) // Fallback
     }
 }

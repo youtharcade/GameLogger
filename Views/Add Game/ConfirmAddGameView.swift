@@ -104,32 +104,30 @@ struct ConfirmAddGameView: View {
         let developers = igdbGame.involved_companies?.filter { $0.developer }.map { $0.company.name } ?? []
         let publishers = igdbGame.involved_companies?.filter { $0.publisher }.map { $0.company.name } ?? []
 
+        // TEMPORARY: Using simplified Game initializer
         let newGame = Game(
             title: igdbGame.name,
-            coverArtURL: igdbGame.cover?.highResURL,
-            platform: platformToAssign, // Assign the definitive, saved platform instance.
+            platform: platformToAssign,
             purchaseDate: Date(),
             isDigital: false,
             purchasePrice: 0.0,
             msrp: 0.0,
-            status: .backlog,
-            isWishlisted: self.addToWishlist,
-            releaseDate: releaseDate,
-            genres: genres,
-            developers: developers,
-            publishers: publishers,
-            isSubGame: self.parentGame != nil,
-            parentCollection: self.parentGame
+            status: .backlog
         )
+        
+        // Set additional properties after creation
+        newGame.coverArtURL = igdbGame.cover?.highResURL
+        newGame.isWishlisted = self.addToWishlist
+        newGame.releaseDate = releaseDate ?? Date()
+        newGame.genresString = genres.joined(separator: ",")
+        newGame.developersString = developers.joined(separator: ",")
+        newGame.publishersString = publishers.joined(separator: ",")
+        newGame.isSubGame = self.parentGame != nil
+        
         modelContext.insert(newGame)
-        // --- Add to parent collection's includedGames if this is a subgame ---
-        if let parent = self.parentGame {
-            if parent.includedGames == nil {
-                parent.includedGames = []
-            }
-            parent.includedGames?.append(newGame)
-        }
-        // --- End block ---
+        
+        // TEMPORARY: Complex parent-child relationships disabled for SwiftData stability
+        // Collection features will be restored once SwiftData relationships are implemented
         dismiss()
     }
 }

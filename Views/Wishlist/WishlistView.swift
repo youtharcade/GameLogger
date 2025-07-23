@@ -23,15 +23,10 @@ struct WishlistView: View {
                             .aspectRatio(contentMode: .fit).frame(width: 45, height: 60).cornerRadius(4)
                         VStack(alignment: .leading) {
                             // Release Date
-                            if let releaseDate = game.releaseDate {
-                                Text(releaseDate, style: .date)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                Text("Release Date Unknown")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
+                            // Non-optional release date
+                            Text(game.releaseDate, style: .date)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                             
                             // Game Title
                             Text(game.title)

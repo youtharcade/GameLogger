@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F843A3C12E1FF22600A545DE"
-               BuildableName = "GameLoggr.app"
-               BlueprintName = "GameLoggr"
-               ReferencedContainer = "container:GameLoggr.xcodeproj">
+               BuildableName = "GameLogger.app"
+               BlueprintName = "GameLogger"
+               ReferencedContainer = "container:GameLogger.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F843A3C12E1FF22600A545DE"
-            BuildableName = "GameLoggr.app"
-            BlueprintName = "GameLoggr"
-            ReferencedContainer = "container:GameLoggr.xcodeproj">
+            BuildableName = "GameLogger.app"
+            BlueprintName = "GameLogger"
+            ReferencedContainer = "container:GameLogger.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F843A3C12E1FF22600A545DE"
-            BuildableName = "GameLoggr.app"
-            BlueprintName = "GameLoggr"
-            ReferencedContainer = "container:GameLoggr.xcodeproj">
+            BuildableName = "GameLogger.app"
+            BlueprintName = "GameLogger"
+            ReferencedContainer = "container:GameLogger.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

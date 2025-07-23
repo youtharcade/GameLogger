@@ -283,7 +283,7 @@ struct GameDetailView: View {
     @State private var playLogRefreshID = UUID()
     
     // MARK: - Properties
-    private let commonPlatforms: [Platform] = Bundle.main.decode("platforms.json")
+    private let commonPlatforms: [Platform] = Bundle.main.loadPlatforms(from: "platforms.json")
     
     private var allAvailablePlatforms: [Platform] {
         var combined = savedPlatforms
@@ -311,15 +311,18 @@ struct GameDetailView: View {
     // MARK: - Computed Properties
     private var linkedGames: [Game] {
         guard let game = game else { return [] }
-        return allGames.filter { $0.parentCollection?.id == game.id }
+        // TEMPORARY: Complex relationships disabled for SwiftData stability
+        // return allGames.filter { $0.parentCollection?.id == game.id }
+        return [] // Will be restored once SwiftData relationships are stable
     }
     
     private var isGameCollection: Bool {
-        return game?.includedGames != nil
+        return game?.isCollection ?? false
     }
     
     private var hasIncludedGames: Bool {
-        return game?.includedGames != nil && !(game?.includedGames?.isEmpty ?? true)
+        // TEMPORARY: Complex relationships disabled
+        return false // Will show "no games" until relationships are restored
     }
     
     private var collectorsGradeColor: Color {
@@ -416,7 +419,7 @@ struct GameDetailView: View {
                     collectorsGradeSection
                 }
             }
-            if game?.isCollection ?? false && (!linkedGames.isEmpty || (game?.includedGames != nil && (game?.includedGames?.isEmpty ?? false))) {
+            if game?.isCollection ?? false {
                 collectionGamesSection
             }
             backlogDetailsSection
@@ -488,10 +491,7 @@ struct GameDetailView: View {
             setupTextFields()
             selectedStatus = game?.status ?? .backlog
             
-            // Defensive: treat empty includedGames as nil
-            if let included = game?.includedGames, included.isEmpty {
-                game?.includedGames = nil
-            }
+                            // TEMPORARY: Complex relationships disabled
         }
         .onChange(of: purchasePriceString) { _, newValue in if let value = Double(newValue) { game?.purchasePrice = value } }
         .onChange(of: msrpString) { _, newValue in if let value = Double(newValue) { game?.msrp = value } }
@@ -546,15 +546,16 @@ struct GameDetailView: View {
                     .foregroundColor(.primary)
             }
         ) {
-            if let releaseDate = game?.releaseDate { HStack { Text("Release Date"); Spacer(); Text(releaseDate.formatted(date: .long, time: .omitted)).foregroundStyle(.secondary) } }
+            if let game = game { HStack { Text("Release Date"); Spacer(); Text(game.releaseDate.formatted(date: .long, time: .omitted)).foregroundStyle(.secondary) } }
             if !(game?.genres.isEmpty ?? true) { HStack { Text("Genre(s)"); Spacer(); Text(game?.genres.joined(separator: ", ") ?? "").foregroundStyle(.secondary).multilineTextAlignment(.trailing) } }
             if !(game?.developers.isEmpty ?? true) { HStack { Text("Developer(s)"); Spacer(); Text(game?.developers.joined(separator: ", ") ?? "").foregroundStyle(.secondary).multilineTextAlignment(.trailing) } }
             if !(game?.publishers.isEmpty ?? true) { HStack { Text("Publisher(s)"); Spacer(); Text(game?.publishers.joined(separator: ", ") ?? "").foregroundStyle(.secondary).multilineTextAlignment(.trailing) } }
             // Add link to parent collection if this is a subgame
-            if game?.isSubGame ?? false, let parent = game?.parentCollection {
-                NavigationLink(destination: GameDetailView(gameID: parent.persistentModelID)) {
-                    Text("Part of Collection ") + Text(parent.title).fontWeight(.semibold).foregroundColor(.primary)
-                }
+            // TEMPORARY: Parent collection links disabled until SwiftData relationships are stable
+            if game?.isSubGame ?? false {
+                Text("Part of Collection")
+                    .foregroundColor(.secondary)
+                    .italic()
             }
         }
     }
@@ -711,18 +712,8 @@ struct GameDetailView: View {
                             Button(action: {
                                 guard let game = game else { return }
                                 
-                                // Clear any existing subgame relationships first
-                                if let subgames = game.includedGames {
-                                    for subgame in subgames {
-                                        subgame.parentCollection = nil
-                                        subgame.isSubGame = false
-                                    }
-                                }
-                                
-                                // Reset all collection-related properties
+                                // TEMPORARY: Simplified collection reset
                                 game.isSubGame = false
-                                game.parentCollection = nil
-                                game.includedGames = nil
                                 game.isCollection = false
                                 
                                 // Save once at the end with proper error handling
@@ -753,15 +744,9 @@ struct GameDetailView: View {
                             Button(action: {
                                 guard let game = game else { return }
                                 
-                                // Set collection-related properties
+                                // TEMPORARY: Simplified collection setup
                                 game.isSubGame = false
-                                game.parentCollection = nil
                                 game.isCollection = true
-                                
-                                // Initialize includedGames if needed (SwiftData will handle the relationship)
-                                if game.includedGames == nil {
-                                    game.includedGames = []
-                                }
                                 
                                 // Save with proper error handling
                                 do {
@@ -770,7 +755,6 @@ struct GameDetailView: View {
                                     print("Error saving collection changes: \(error)")
                                     // Reset on error
                                     game.isCollection = false
-                                    game.includedGames = nil
                                 }
                             }) {
                                 HStack {
@@ -970,20 +954,11 @@ struct GameDetailView: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             if !linkedGames.isEmpty {
-                ForEach(linkedGames) { subGame in
-                    NavigationLink(destination: GameDetailView(gameID: subGame.persistentModelID)) {
-                        HStack {
-                            Image(systemName: "gamecontroller.fill")
-                                .foregroundColor(.blue)
-                                .font(.caption)
-                            Text(subGame.title)
-                                .foregroundColor(.primary)
-                            Spacer()
-                            // Removed manual chevron
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
+                                    // TEMPORARY: Collection games disabled until SwiftData relationships are stable
+                    Text("Collection games will be restored once SwiftData relationships are implemented")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .italic()
             } else {
                 Text("No games added to this collection yet.")
                     .font(.subheadline)
@@ -1470,10 +1445,10 @@ struct GameDetailView: View {
                         self.selectedStatus = foundGame.status
                         self.setupTextFields()
                         
-                        // Defensive: treat empty includedGames as nil
-                        if let included = foundGame.includedGames, included.isEmpty {
-                            foundGame.includedGames = nil
-                        }
+                        // TEMPORARY: Complex relationships disabled
+                        // if let included = foundGame.includedGames, included.isEmpty {
+                        //     foundGame.includedGames = nil
+                        // }
                     }
                     return
                 }
@@ -1489,10 +1464,10 @@ struct GameDetailView: View {
                         self.selectedStatus = foundGame.status
                         self.setupTextFields()
                         
-                        // Defensive: treat empty includedGames as nil
-                        if let included = foundGame.includedGames, included.isEmpty {
-                            foundGame.includedGames = nil
-                        }
+                        // TEMPORARY: Complex relationships disabled
+                        // if let included = foundGame.includedGames, included.isEmpty {
+                        //     foundGame.includedGames = nil
+                        // }
                     }
                 } else {
                     // Game truly not found
@@ -1570,17 +1545,8 @@ struct GameDetailView: View {
     private func handleStatusChange(to newStatus: GameStatus) {
         guard let game = game else { return }
         
-        if newStatus == .completed, let subGames = game.includedGames, !subGames.isEmpty {
-            let allSubGamesCompleted = subGames.allSatisfy { $0.status == .completed }
-            if !allSubGamesCompleted {
-                showCompletionAlert = true
-                selectedStatus = game.status
-            } else {
-                game.status = newStatus
-            }
-        } else {
+                    // TEMPORARY: Simplified status change (complex collection validation disabled)
             game.status = newStatus
-        }
     }
     
     private func addPlayLogEntry(_ entry: PlayLogEntry) { 

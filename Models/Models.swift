@@ -27,178 +27,111 @@ enum OwnershipStatus: String, Codable, CaseIterable {
 
 @Model
 class Game {
-    @Attribute(.unique) var id: UUID = UUID()
-    // Core Properties
-    var title: String
+    var id: String = UUID().uuidString
+    var title: String = ""
     var coverArtURL: URL?
-    var platform: Platform?
-    var purchaseDate: Date
-    var isDigital: Bool
-    var purchasePrice: Double
-    var msrp: Double
+    var customCoverArt: Data?
     
-    // Status & Backlog
-    var statusValue: String
-    var startDate: Date?
-    var completionDate: Date?
-    
-    // Relationships
-    @Relationship(deleteRule: .cascade, inverse: \PlayLogEntry.game)
-    var playLog: [PlayLogEntry] = []
-    
-    // External Data
-    var hltbMain: Double = 0
-    var hltbExtra: Double = 0
-    var hltbCompletionist: Double = 0
-    
-    // User-Tracked Data
-    var manuallySetTotalTime: Double = 0
+    // Basic Game Properties
+    var releaseDate: Date = Date()
+    var purchaseDate: Date = Date()
+    var startDate: Date = Date()
+    var completionDate: Date = Date()
+    var isDigital: Bool = false
+    var purchasePrice: Double = 0.0
+    var msrp: Double = 0.0
+    var status: GameStatus = GameStatus.backlog
     var starRating: Double = 0
-    var userHLTBMain: Double = 0
-    var userHLTBExtra: Double = 0
-    var userHLTBCompletionist: Double = 0
-    
-    // Categorization
     var isWishlisted: Bool = false
+    var ownershipStatus: OwnershipStatus = OwnershipStatus.owned
+    var isInstalled: Bool = false
+    var gameSizeInMB: Double = 0
+    var totalTimePlayed: Double = 0
+    var manuallySetTotalTime: Double = 0
     
-    // External Files
-    @Attribute(.externalStorage) var customCoverArt: Data?
-    @Attribute(.externalStorage) var manualPDFsData: Data?
-    
-    // Physical Collector's Grade
+    // Physical Game Properties
     var hasCase: Bool = false
     var hasManual: Bool = false
     var hasInserts: Bool = false
     var isSealed: Bool = false
+    var collectorsGrade: String = "Near Mint"
     
-    // Digital Edition
-    var isInstalled: Bool = false
-    var gameSizeInMB: Double = 0
+    // HLTB Properties
+    var userHLTBMain: Double = 0
+    var userHLTBExtra: Double = 0
+    var userHLTBCompletionist: Double = 0
     
-    // IGDB Info
-    var releaseDate: Date?
+    // String Properties for JSON Data (SwiftData compatible)
     var genresString: String = ""
     var developersString: String = ""
     var publishersString: String = ""
     
-    // Hardware & Game Collection Relationships
-    var linkedHardware: Hardware?
-    var isSubGame: Bool = false
-    var parentCollection: Game?
-    @Relationship(deleteRule: .cascade)
-    var includedGames: [Game]? = nil
-    var isCollection: Bool = false
-    
-    // Walkthrough Links Relationship
-    @Relationship(deleteRule: .cascade, inverse: \HelpfulLink.game)
-    var helpfulLinks: [HelpfulLink] = []
-    
-    // Ownership Status
-    var ownershipStatusValue: String = OwnershipStatus.owned.rawValue
-
-    // --- COMPUTED PROPERTIES ---
-    
-    var status: GameStatus {
-        get { GameStatus(rawValue: statusValue) ?? .backlog }
-        set { statusValue = newValue.rawValue }
-    }
-    
-    var totalTimePlayed: Double {
-        if manuallySetTotalTime > 0 {
-            return manuallySetTotalTime
-        } else {
-            return playLog.reduce(0) { $0 + $1.timeSpent } / 3600 // Return in hours
-        }
-    }
-    
-    var collectorsGrade: String {
-        if isSealed { return "Sealed" }
-        if hasCase && hasManual && hasInserts { return "CIB+" }
-        if hasCase && hasManual { return "CIB (Complete in Box)" }
-        if hasCase { return "In Case" }
-        return "Loose"
-    }
-    
+    // Computed Properties for Array Access (SwiftData compatible)
     var genres: [String] {
-        get { genresString.split(separator: ",").map(String.init) }
+        get { genresString.isEmpty ? [] : genresString.components(separatedBy: ",") }
         set { genresString = newValue.joined(separator: ",") }
     }
     
     var developers: [String] {
-        get { developersString.split(separator: ",").map(String.init) }
+        get { developersString.isEmpty ? [] : developersString.components(separatedBy: ",") }
         set { developersString = newValue.joined(separator: ",") }
     }
     
     var publishers: [String] {
-        get { publishersString.split(separator: ",").map(String.init) }
+        get { publishersString.isEmpty ? [] : publishersString.components(separatedBy: ",") }
         set { publishersString = newValue.joined(separator: ",") }
     }
     
-    var ownershipStatus: OwnershipStatus {
-        get { OwnershipStatus(rawValue: ownershipStatusValue) ?? .owned }
-        set { ownershipStatusValue = newValue.rawValue }
+    // Status Value Computed Property
+    var statusValue: String {
+        return status.rawValue
     }
     
-    var manualPDFs: [Data] {
-        get {
-            guard let data = manualPDFsData else { return [] }
-            return (try? JSONDecoder().decode([Data].self, from: data)) ?? []
-        }
-        set {
-            manualPDFsData = try? JSONEncoder().encode(newValue)
-        }
+    var ownershipStatusValue: String {
+        return ownershipStatus.rawValue
     }
     
-    var overlayIcon: (name: String, color: Color)? {
-            if self.ownershipStatus != .owned {
-                return ("archivebox.fill", .gray) // For "Graveyard" games
-            }
-            if self.isSubGame {
-                return ("link", .white) // For games included in a collection
-            }
-            // Add other cases here if you want more indicators
-            
-            return nil // No icon for standard collection games
-        }
+    // Platform Relationship
+    var platform: Platform?
     
-    // --- INITIALIZER ---
+    // Play Log Relationship
+    var playLog: [PlayLogEntry] = []
     
-    init(title: String, coverArtURL: URL? = nil, platform: Platform?, purchaseDate: Date, isDigital: Bool, purchasePrice: Double, msrp: Double, status: GameStatus, startDate: Date? = nil, completionDate: Date? = nil, playLog: [PlayLogEntry] = [], hltbMain: Double = 0, hltbExtra: Double = 0, hltbCompletionist: Double = 0, manuallySetTotalTime: Double = 0, isWishlisted: Bool = false, manualPDF: Data? = nil, hasCase: Bool = false, hasManual: Bool = false, hasInserts: Bool = false, isSealed: Bool = false, isInstalled: Bool = false, gameSizeInMB: Double = 0, starRating: Double = 0, customCoverArt: Data? = nil, releaseDate: Date? = nil, genres: [String] = [], developers: [String] = [], publishers: [String] = [], linkedHardware: Hardware? = nil, isSubGame: Bool = false, parentCollection: Game? = nil, helpfulLinks: [HelpfulLink] = [], ownershipStatus: OwnershipStatus = .owned) {
+    // PDF Data
+    var manualPDFs: [Data] = []
+    
+    // Hardware Relationship
+    var linkedHardware: Hardware?
+    
+    // Collection Properties (simplified - no complex relationships yet)
+    var isSubGame: Bool = false
+    var isCollection: Bool = false
+    
+    // Collection Relationships - RE-ENABLED with caution
+    var parentCollection: Game?
+    var includedGames: [Game]? = nil
+    
+    // Walkthrough Links Relationship
+    var helpfulLinks: [HelpfulLink] = []
+    
+    // Calculated Total Time Played
+    var calculatedTotalTime: Double {
+        return playLog.reduce(0) { $0 + $1.timeSpent }
+    }
+    
+    // Use manual time if set, otherwise calculated
+    var effectiveTotalTime: Double {
+        return manuallySetTotalTime > 0 ? manuallySetTotalTime : calculatedTotalTime
+    }
+    
+    init(title: String, platform: Platform? = nil, purchaseDate: Date = Date(), isDigital: Bool = false, purchasePrice: Double = 0.0, msrp: Double = 0.0, status: GameStatus = GameStatus.backlog) {
         self.title = title
-        self.coverArtURL = coverArtURL
         self.platform = platform
         self.purchaseDate = purchaseDate
         self.isDigital = isDigital
         self.purchasePrice = purchasePrice
         self.msrp = msrp
-        self.statusValue = status.rawValue
-        self.startDate = startDate
-        self.completionDate = completionDate
-        self.playLog = playLog
-        self.hltbMain = hltbMain
-        self.hltbExtra = hltbExtra
-        self.hltbCompletionist = hltbCompletionist
-        self.manuallySetTotalTime = manuallySetTotalTime
-        self.isWishlisted = isWishlisted
-        self.manualPDFs = manualPDFs
-        self.hasCase = hasCase
-        self.hasManual = hasManual
-        self.hasInserts = hasInserts
-        self.isSealed = isSealed
-        self.isInstalled = isInstalled
-        self.gameSizeInMB = gameSizeInMB
-        self.starRating = starRating
-        self.customCoverArt = customCoverArt
-        self.releaseDate = releaseDate
-        self.linkedHardware = linkedHardware
-        self.isSubGame = isSubGame
-        self.parentCollection = parentCollection
-        self.helpfulLinks = helpfulLinks
-        self.ownershipStatusValue = ownershipStatus.rawValue
-        
-        self.genres = genres
-        self.developers = developers
-        self.publishers = publishers
+        self.status = status
     }
 }
 
@@ -221,7 +154,7 @@ class PlayLogEntry {
 }
 
 @Model
-class Platform: Codable {
+class Platform {
     @Attribute(.unique) var id: Int
     var name: String
     var logoURL: URL?
@@ -229,11 +162,24 @@ class Platform: Codable {
     @Relationship(inverse: \Hardware.platform)
     var hardware: [Hardware]? = []
     
+    init(id: Int, name: String, logoURL: URL? = nil) {
+        self.id = id
+        self.name = name
+        self.logoURL = logoURL
+    }
+}
+
+// Separate struct for JSON loading from platforms.json
+struct PlatformData: Codable {
+    let id: Int
+    let name: String
+    let logoURL: URL?
+    
     enum CodingKeys: String, CodingKey {
         case id, name, logoURL
     }
     
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
@@ -246,11 +192,10 @@ class Platform: Codable {
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(logoURL, forKey: .logoURL)
     }
-
-    init(id: Int, name: String, logoURL: URL? = nil) {
-        self.id = id
-        self.name = name
-        self.logoURL = logoURL
+    
+    // Convert to SwiftData Platform
+    func toPlatform() -> Platform {
+        return Platform(id: id, name: name, logoURL: logoURL)
     }
 }
 

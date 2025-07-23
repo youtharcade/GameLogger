@@ -10,7 +10,7 @@ struct HardwareDetailView: View {
     private var isNew: Bool
     
     @Query private var existingPlatforms: [Platform]
-    private let commonPlatforms: [Platform] = Bundle.main.decode("platforms.json")
+    private let commonPlatforms: [Platform] = Bundle.main.loadPlatforms(from: "platforms.json")
     
     // State for pickers and text fields
     @State private var selectedPlatform: Platform?

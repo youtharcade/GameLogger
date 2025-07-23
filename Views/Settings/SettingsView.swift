@@ -83,7 +83,7 @@ struct SettingsView: View {
                     .foregroundColor(.green)
                     .font(.title2)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("GameLogger")
+                    Text("GameLoggr")
                         .font(.headline)
                         .fontWeight(.bold)
                     Text("Your personal game collection manager")

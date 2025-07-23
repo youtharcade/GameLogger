@@ -61,9 +61,9 @@ struct StatsView: View {
     private var oldestBacklogGames: [Game] { Array(games.filter { $0.status != .completed }.sorted { $0.purchaseDate < $1.purchaseDate }.prefix(5)) }
     private var recentlyCompleted: [Game] { 
         Array(games.compactMap { game in
-            guard game.status == .completed, let _ = game.completionDate else { return nil }
+            guard game.status == .completed else { return nil }
             return game
-        }.sorted { ($0.completionDate ?? .distantPast) > ($1.completionDate ?? .distantPast) }.prefix(5))
+        }.sorted { $0.completionDate > $1.completionDate }.prefix(5))
     }
 
     // Hardware stats
@@ -411,8 +411,8 @@ struct StatsView: View {
                                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                                                 .shadow(radius: 2)
                                         }
-                                        if let date = game.completionDate {
-                                            Text(date.formatted(date: .abbreviated, time: .omitted))
+                                        if game.status == .completed {
+                                            Text(game.completionDate.formatted(date: .abbreviated, time: .omitted))
                                                 .font(.caption2)
                                                 .foregroundColor(.secondary)
                                         } else {

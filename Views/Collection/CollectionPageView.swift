@@ -109,7 +109,8 @@ struct CollectionPageView: View {
         List {
             if platformFilter == nil && hardwareFilter == nil {
                 // Linked Games section for subgames
-                let linkedGames = allGames.filter { $0.isSubGame && !$0.isWishlisted }
+                // TEMPORARY: Complex relationships disabled - no sub-games shown
+                let linkedGames: [Game] = []
                 if !linkedGames.isEmpty {
                     Section(header: Text("Linked Games").font(.headline)) {
                         ForEach(linkedGames) { game in
@@ -221,15 +222,8 @@ struct GameRow: View {
                     .cornerRadius(4)
                     
                     // Display the icon if one exists
-                    if let icon = game.overlayIcon {
-                        Image(systemName: icon.name)
-                            .font(.caption2.bold())
-                            .foregroundStyle(icon.color)
-                            .padding(4)
-                            .background(.black.opacity(0.6))
-                            .clipShape(Circle())
-                            .padding(2)
-                    }
+                    // TEMPORARY: overlayIcon disabled for SwiftData compatibility
+                    // Overlay icons temporarily removed until SwiftData relationships are stable
                 }
                 
                 VStack(alignment: .leading) {

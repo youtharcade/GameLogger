@@ -119,15 +119,11 @@ struct BacklogView: View {
     // Helper for subtitle
     private func backlogSubtitle(for game: Game) -> String {
         let time = game.totalTimePlayed > 0 ? String(format: "%.1f hrs", game.totalTimePlayed) : nil
-        let start = game.startDate?.formatted(date: .abbreviated, time: .omitted)
-        if let time, let start {
+        let start = game.startDate.formatted(date: .abbreviated, time: .omitted)
+        if let time {
             return "\(time) • Started \(start)"
-        } else if let time {
-            return time
-        } else if let start {
-            return "Started \(start)"
         } else {
-            return "No play data"
+            return "Started \(start)"
         }
     }
 
