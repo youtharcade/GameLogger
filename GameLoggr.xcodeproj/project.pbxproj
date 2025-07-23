@@ -59,7 +59,7 @@
 		54D1A22F2E2680F6006F6FAB /* ComponentSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentSelectorView.swift; sourceTree = "<group>"; };
 		54DF77A02E2978C300BCA278 /* MarkdownDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownDisplayView.swift; sourceTree = "<group>"; };
 		54DF77B92E29809500BCA278 /* GameLogger.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GameLogger.entitlements; sourceTree = "<group>"; };
-		F843A3C22E1FF22600A545DE /* GameLogger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameLogger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F843A3C22E1FF22600A545DE /* GameLoggr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameLoggr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F843A4312E20803100A545DE /* AddGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGameView.swift; sourceTree = "<group>"; };
 		F843A4322E20803100A545DE /* AddPlayLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlayLogView.swift; sourceTree = "<group>"; };
 		F843A4332E20803100A545DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -153,7 +153,7 @@
 		F843A3C32E1FF22600A545DE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F843A3C22E1FF22600A545DE /* GameLogger.app */,
+				F843A3C22E1FF22600A545DE /* GameLoggr.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,9 +272,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F843A3C12E1FF22600A545DE /* GameLogger */ = {
+		F843A3C12E1FF22600A545DE /* GameLoggr */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F843A3CE2E1FF22800A545DE /* Build configuration list for PBXNativeTarget "GameLogger" */;
+			buildConfigurationList = F843A3CE2E1FF22800A545DE /* Build configuration list for PBXNativeTarget "GameLoggr" */;
 			buildPhases = (
 				F843A3BE2E1FF22600A545DE /* Sources */,
 				F843A3BF2E1FF22600A545DE /* Frameworks */,
@@ -284,12 +284,12 @@
 			);
 			dependencies = (
 			);
-			name = GameLogger;
+			name = GameLoggr;
 			packageProductDependencies = (
 				54DF779E2E29632A00BCA278 /* Markdown */,
 			);
 			productName = GameLogger;
-			productReference = F843A3C22E1FF22600A545DE /* GameLogger.app */;
+			productReference = F843A3C22E1FF22600A545DE /* GameLoggr.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -307,7 +307,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F843A3BD2E1FF22600A545DE /* Build configuration list for PBXProject "GameLogger" */;
+			buildConfigurationList = F843A3BD2E1FF22600A545DE /* Build configuration list for PBXProject "GameLoggr" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -324,7 +324,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F843A3C12E1FF22600A545DE /* GameLogger */,
+				F843A3C12E1FF22600A545DE /* GameLoggr */,
 			);
 		};
 /* End PBXProject section */
@@ -588,7 +588,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F843A3BD2E1FF22600A545DE /* Build configuration list for PBXProject "GameLogger" */ = {
+		F843A3BD2E1FF22600A545DE /* Build configuration list for PBXProject "GameLoggr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F843A3CC2E1FF22800A545DE /* Debug */,
@@ -597,7 +597,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F843A3CE2E1FF22800A545DE /* Build configuration list for PBXNativeTarget "GameLogger" */ = {
+		F843A3CE2E1FF22800A545DE /* Build configuration list for PBXNativeTarget "GameLoggr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F843A3CF2E1FF22800A545DE /* Debug */,

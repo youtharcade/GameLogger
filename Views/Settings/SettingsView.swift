@@ -262,7 +262,7 @@ struct SettingsView: View {
                             .font(.headline)
                             .fontWeight(.semibold)
                             .foregroundColor(.primary)
-                        Text("See how to use GameLogger's features")
+                        Text("See how to use GameLoggr's features")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -317,7 +317,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "questionmark.circle")
                         .foregroundColor(.secondary)
-                    Text("GameLogger Support")
+                    Text("GameLoggr Support")
                     Spacer()
                     if showDeveloperOptions {
                         Text("Dev Mode: ON")
@@ -367,7 +367,7 @@ struct SettingsView: View {
                             .font(.system(size: 60))
                             .foregroundColor(.green)
                         
-                        Text("GameLogger")
+                        Text("GameLoggr")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         
@@ -379,11 +379,11 @@ struct SettingsView: View {
                     
                     // Description
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("About GameLogger")
+                        Text("About GameLoggr")
                             .font(.headline)
                             .fontWeight(.bold)
                         
-                        Text("GameLogger is your personal game collection manager. Track your games, log your playtime, rate your experiences, and manage your gaming backlog all in one place.")
+                        Text("GameLoggr is your personal game collection manager. Track your games, log your playtime, rate your experiences, and manage your gaming backlog all in one place.")
                             .font(.body)
                             .lineSpacing(4)
                     }

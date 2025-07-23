@@ -12,7 +12,7 @@ struct OnboardingView: View {
     
     private let pages = [
         OnboardingPage(
-            title: "Welcome to GameLogger",
+            title: "Welcome to GameLoggr",
             subtitle: "Your ultimate game collection manager",
             imageName: "gamecontroller.fill",
             description: "Track your games, hardware, and gaming progress all in one place.",
@@ -36,7 +36,7 @@ struct OnboardingView: View {
             title: "Track Your Hardware",
             subtitle: "Monitor storage and capacity",
             imageName: "externaldrive.fill",
-            description: "Add consoles, drives, and storage devices. GameLogger automatically calculates remaining space based on your installed games.",
+            description: "Add consoles, drives, and storage devices. GameLoggr automatically calculates remaining space based on your installed games.",
             backgroundColor: Color(red: 0.5, green: 0.3, blue: 0.7)
         ),
         OnboardingPage(
