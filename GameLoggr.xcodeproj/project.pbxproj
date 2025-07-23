@@ -11,6 +11,7 @@
 		5421895C2E2A7D6200B8B529 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5421893B2E2A7D6200B8B529 /* .gitignore */; };
 		54218A602E2AA26400B8B529 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54218A5F2E2AA25700B8B529 /* Config.swift */; };
 		549E4DF62E22263600E5D8A0 /* IDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549E4DF52E22262D00E5D8A0 /* IDs.swift */; };
+		54ABBFAF2E3140590085CCC9 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54ABBFAE2E3140590085CCC9 /* Info.plist */; };
 		54D1A21A2E222F8C006F6FAB /* HardwareListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D1A2192E222F8C006F6FAB /* HardwareListView.swift */; };
 		54D1A21C2E222FB0006F6FAB /* HardwareDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D1A21B2E222FB0006F6FAB /* HardwareDetailView.swift */; };
 		54D1A21E2E22DB48006F6FAB /* AddLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D1A21D2E22DB48006F6FAB /* AddLinkView.swift */; };
@@ -47,6 +48,7 @@
 		5421893B2E2A7D6200B8B529 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		54218A5F2E2AA25700B8B529 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		549E4DF52E22262D00E5D8A0 /* IDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDs.swift; sourceTree = "<group>"; };
+		54ABBFAE2E3140590085CCC9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		54D1A2192E222F8C006F6FAB /* HardwareListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareListView.swift; sourceTree = "<group>"; };
 		54D1A21B2E222FB0006F6FAB /* HardwareDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareDetailView.swift; sourceTree = "<group>"; };
 		54D1A21D2E22DB48006F6FAB /* AddLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLinkView.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				54D1A2212E24B877006F6FAB /* platforms.json */,
 				549E4DF52E22262D00E5D8A0 /* IDs.swift */,
 				F843A4332E20803100A545DE /* Assets.xcassets */,
+				54ABBFAE2E3140590085CCC9 /* Info.plist */,
 				F843A45B2E208D8000A545DE /* GameLogger 2.entitlements */,
 			);
 			path = Resources;
@@ -337,6 +340,7 @@
 				542188892E2A7D4500B8B529 /* README.md in Resources */,
 				54D1A2222E24B87D006F6FAB /* platforms.json in Resources */,
 				F843A44D2E20803100A545DE /* Assets.xcassets in Resources */,
+				54ABBFAF2E3140590085CCC9 /* Info.plist in Resources */,
 				5421895C2E2A7D6200B8B529 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
