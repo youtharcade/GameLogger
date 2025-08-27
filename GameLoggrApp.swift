@@ -10,17 +10,17 @@ import SwiftData
 @main
 struct GameLoggrApp: App {
     let container: ModelContainer = {
-        print("🚀 Starting GameLoggr with iOS 17.0 deployment target...")
+        print("🚀 Starting GameLoggr with local storage...")
         
-        // TEMPORARY: Use local storage only until CloudKit requirements are met
-        // CloudKit requires: inverse relationships + optional/default attributes
+        // Using local storage only - no CloudKit sync
         
         // Try local storage first
         do {
             print("💾 Creating local ModelContainer...")
             let localConfig = ModelConfiguration(
                 schema: Schema([Game.self, Platform.self, PlayLogEntry.self, Hardware.self, HelpfulLink.self]),
-                isStoredInMemoryOnly: false
+                isStoredInMemoryOnly: false,
+                cloudKitDatabase: .none
             )
             let container = try ModelContainer(for: Game.self, Platform.self, PlayLogEntry.self, Hardware.self, HelpfulLink.self, configurations: localConfig)
             print("✅ SUCCESS: Local ModelContainer created!")
@@ -37,7 +37,8 @@ struct GameLoggrApp: App {
             print("🧠 Creating in-memory ModelContainer...")
             let memoryConfig = ModelConfiguration(
                 schema: Schema([Game.self, Platform.self, PlayLogEntry.self, Hardware.self, HelpfulLink.self]),
-                isStoredInMemoryOnly: true
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
             )
             let container = try ModelContainer(for: Game.self, Platform.self, PlayLogEntry.self, Hardware.self, HelpfulLink.self, configurations: memoryConfig)
             print("⚡ SUCCESS: In-memory ModelContainer created!")

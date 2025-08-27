@@ -94,7 +94,8 @@ class Game {
     // Platform Relationship
     var platform: Platform?
     
-    // Play Log Relationship
+    // Play Log Relationship  
+    @Relationship(deleteRule: .cascade, inverse: \PlayLogEntry.game)
     var playLog: [PlayLogEntry] = []
     
     // PDF Data
@@ -107,11 +108,14 @@ class Game {
     var isSubGame: Bool = false
     var isCollection: Bool = false
     
-    // Collection Relationships - RE-ENABLED with caution
-    var parentCollection: Game?
-    var includedGames: [Game]? = nil
+    // Collection relationships - using string ID approach to avoid SwiftData macro conflicts
+    var parentCollectionID: String?
+    
+    @Relationship(deleteRule: .nullify)
+    var includedGames: [Game] = []
     
     // Walkthrough Links Relationship
+    @Relationship(deleteRule: .cascade, inverse: \HelpfulLink.game)
     var helpfulLinks: [HelpfulLink] = []
     
     // Calculated Total Time Played
@@ -123,6 +127,9 @@ class Game {
     var effectiveTotalTime: Double {
         return manuallySetTotalTime > 0 ? manuallySetTotalTime : calculatedTotalTime
     }
+    
+    // Note: parentCollection relationship resolved in views using parentCollectionID
+    // Removed computed property to avoid SwiftData macro conflicts
     
     init(title: String, platform: Platform? = nil, purchaseDate: Date = Date(), isDigital: Bool = false, purchasePrice: Double = 0.0, msrp: Double = 0.0, status: GameStatus = GameStatus.backlog) {
         self.title = title
@@ -161,6 +168,9 @@ class Platform {
     
     @Relationship(inverse: \Hardware.platform)
     var hardware: [Hardware]? = []
+    
+    @Relationship(inverse: \Game.platform)
+    var games: [Game] = []
     
     init(id: Int, name: String, logoURL: URL? = nil) {
         self.id = id

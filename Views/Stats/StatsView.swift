@@ -134,7 +134,7 @@ struct StatsView: View {
 
     private var topRatedGames: [Game] {
         games.filter { $0.starRating == 5 }
-            .sorted { ($0.completionDate ?? .distantPast) > ($1.completionDate ?? .distantPast) }
+            .sorted { $0.completionDate > $1.completionDate }
             .prefix(5)
             .map { $0 }
     }

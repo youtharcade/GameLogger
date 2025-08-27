@@ -311,9 +311,7 @@ struct GameDetailView: View {
     // MARK: - Computed Properties
     private var linkedGames: [Game] {
         guard let game = game else { return [] }
-        // TEMPORARY: Complex relationships disabled for SwiftData stability
-        // return allGames.filter { $0.parentCollection?.id == game.id }
-        return [] // Will be restored once SwiftData relationships are stable
+        return game.includedGames
     }
     
     private var isGameCollection: Bool {
@@ -954,11 +952,35 @@ struct GameDetailView: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
             if !linkedGames.isEmpty {
-                                    // TEMPORARY: Collection games disabled until SwiftData relationships are stable
-                    Text("Collection games will be restored once SwiftData relationships are implemented")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .italic()
+                ForEach(linkedGames, id: \.id) { linkedGame in
+                    NavigationLink(destination: GameDetailView(gameID: linkedGame.persistentModelID)) {
+                        HStack {
+                            AsyncImage(url: linkedGame.coverArtURL) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } placeholder: {
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.3))
+                            }
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(8)
+                            
+                            VStack(alignment: .leading) {
+                                Text(linkedGame.title)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Text(linkedGame.platform?.name ?? "Unknown Platform")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
             } else {
                 Text("No games added to this collection yet.")
                     .font(.subheadline)

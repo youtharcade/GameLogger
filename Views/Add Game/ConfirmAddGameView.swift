@@ -126,8 +126,23 @@ struct ConfirmAddGameView: View {
         
         modelContext.insert(newGame)
         
-        // TEMPORARY: Complex parent-child relationships disabled for SwiftData stability
-        // Collection features will be restored once SwiftData relationships are implemented
-        dismiss()
+        // Set up parent-child relationship if this is a sub-game
+        if let parentGame = self.parentGame {
+            newGame.parentCollectionID = parentGame.id
+            parentGame.includedGames.append(newGame)
+        }
+        
+        do {
+            try modelContext.save()
+            dismiss()
+        } catch {
+            print("Error saving game to collection: \(error)")
+            // Remove from parent if save failed
+            if let parentGame = self.parentGame,
+               let index = parentGame.includedGames.firstIndex(of: newGame) {
+                parentGame.includedGames.remove(at: index)
+                newGame.parentCollectionID = nil
+            }
+        }
     }
 }
