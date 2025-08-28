@@ -43,6 +43,8 @@
     </array>
     <key>CFBundleIconName</key>
     <string>AppIcon</string>
+    <key>NSUserNotificationsUsageDescription</key>
+    <string>GameLoggr would like to send you notifications about upcoming game releases in your wishlist and reminders to check your game backlog.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSExceptionDomains</key>
