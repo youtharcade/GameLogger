@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		540A261F2E5FA99E00A1C7A2 /* APICredentialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A261E2E5FA99E00A1C7A2 /* APICredentialsView.swift */; };
+		540A26212E5FA9B600A1C7A2 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A26202E5FA9B600A1C7A2 /* KeychainHelper.swift */; };
+		540A26242E5FE05400A1C7A2 /* GameLoggrDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A26232E5FE05400A1C7A2 /* GameLoggrDocument.swift */; };
+		540A26252E5FE05400A1C7A2 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A26222E5FE05400A1C7A2 /* DataManager.swift */; };
+		540A26272E5FE06600A1C7A2 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A26262E5FE06600A1C7A2 /* PrivacyPolicyView.swift */; };
+		540A26292E5FE47E00A1C7A2 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540A26282E5FE47E00A1C7A2 /* NotificationManager.swift */; };
 		542188892E2A7D4500B8B529 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 542188882E2A7D4500B8B529 /* README.md */; };
 		5421895C2E2A7D6200B8B529 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5421893B2E2A7D6200B8B529 /* .gitignore */; };
 		54218A602E2AA26400B8B529 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54218A5F2E2AA25700B8B529 /* Config.swift */; };
@@ -43,6 +49,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		540A261E2E5FA99E00A1C7A2 /* APICredentialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICredentialsView.swift; sourceTree = "<group>"; };
+		540A26202E5FA9B600A1C7A2 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		540A26222E5FE05400A1C7A2 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		540A26232E5FE05400A1C7A2 /* GameLoggrDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLoggrDocument.swift; sourceTree = "<group>"; };
+		540A26262E5FE06600A1C7A2 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		540A26282E5FE47E00A1C7A2 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		542188882E2A7D4500B8B529 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5421893B2E2A7D6200B8B529 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		54218A5F2E2AA25700B8B529 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -121,6 +133,8 @@
 		54D1A2292E24CFD6006F6FAB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				540A26262E5FE06600A1C7A2 /* PrivacyPolicyView.swift */,
+				540A261E2E5FA99E00A1C7A2 /* APICredentialsView.swift */,
 				54D1A22A2E24CFE4006F6FAB /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -188,6 +202,10 @@
 		F843A4502E20805800A545DE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				540A26282E5FE47E00A1C7A2 /* NotificationManager.swift */,
+				540A26222E5FE05400A1C7A2 /* DataManager.swift */,
+				540A26232E5FE05400A1C7A2 /* GameLoggrDocument.swift */,
+				540A26202E5FA9B600A1C7A2 /* KeychainHelper.swift */,
 				54218A5F2E2AA25700B8B529 /* Config.swift */,
 				F843A43C2E20803100A545DE /* IGDBClient.swift */,
 			);
@@ -352,17 +370,23 @@
 			files = (
 				F843A4402E20803100A545DE /* CollectionPageView.swift in Sources */,
 				F843A4412E20803100A545DE /* GameDetailView.swift in Sources */,
+				540A261F2E5FA99E00A1C7A2 /* APICredentialsView.swift in Sources */,
 				F8D84A362E21626300C56818 /* WishlistView.swift in Sources */,
 				F843A4432E20803100A545DE /* IGDBClient.swift in Sources */,
 				F8D84A2F2E20ACC900C56818 /* ConfirmAddGameView.swift in Sources */,
 				F843A4442E20803100A545DE /* ManualAddGameView.swift in Sources */,
+				540A26242E5FE05400A1C7A2 /* GameLoggrDocument.swift in Sources */,
+				540A26252E5FE05400A1C7A2 /* DataManager.swift in Sources */,
 				54D1A2282E24BE46006F6FAB /* GraveyardView.swift in Sources */,
 				F843A4452E20803100A545DE /* GameGridItemView.swift in Sources */,
 				549E4DF62E22263600E5D8A0 /* IDs.swift in Sources */,
 				54D1A22E2E253936006F6FAB /* PlatformSearchView.swift in Sources */,
 				F8D84A332E21620300C56818 /* PDFViewer.swift in Sources */,
 				F843A4462E20803100A545DE /* ContentView.swift in Sources */,
+				540A26272E5FE06600A1C7A2 /* PrivacyPolicyView.swift in Sources */,
+				540A26212E5FA9B600A1C7A2 /* KeychainHelper.swift in Sources */,
 				54D1A21A2E222F8C006F6FAB /* HardwareListView.swift in Sources */,
+				540A26292E5FE47E00A1C7A2 /* NotificationManager.swift in Sources */,
 				F843A4472E20803100A545DE /* GameLoggrApp.swift in Sources */,
 				F843A4482E20803100A545DE /* AddGameView.swift in Sources */,
 				54D1A2252E24B9EB006F6FAB /* Bundle+Decodable.swift in Sources */,
